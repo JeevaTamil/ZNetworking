@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@available(iOS 13.0, *)
 @available(macOS 10.15, *)
 public class ZAPIManager {
     public static var shared = ZAPIManager()
@@ -20,7 +21,7 @@ public class ZAPIManager {
             // 2. Use 'map'(Operator) to get the data from the result
             .map { $0.data }
             // 3. Decode the data into the 'Decodable' struct using JSONDecoder
-            .decode(type: NetworkResponse<T>.self, decoder: JSONDecoder())
+            .decode(type: T.self, decoder: JSONDecoder())
             // 4. Make this process in main thread. (you can do this in background thread as well)
             .receive(on: DispatchQueue.main)
             // 5. Use 'sink'(Subcriber) to get the decoaded value or error, and pass it to completion handler
@@ -32,7 +33,7 @@ public class ZAPIManager {
                     return
                 }
             } receiveValue: { (result) in
-                completion(.success(result.result))
+                completion(.success(result))
             }
             // 6. saving the subscriber into an AnyCancellable Set (without this step this won't work)
             .store(in: &subscriber)
@@ -41,7 +42,7 @@ public class ZAPIManager {
     public func fetch<T: Codable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
         session.dataTaskPublisher(for: request)
             .map { $0.data }
-            .decode(type: NetworkResponse<T>.self, decoder: JSONDecoder())
+            .decode(type: T.self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
             .sink { (resultCompletion) in
                 switch resultCompletion {
@@ -51,7 +52,7 @@ public class ZAPIManager {
                     return
                 }
             } receiveValue: { (result) in
-                completion(.success(result.result))
+                completion(.success(result))
             }
             .store(in: &subscriber)
     }
