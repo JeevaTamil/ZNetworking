@@ -19,7 +19,7 @@ public class APIOperation: OperationProtocol {
 
     /// Designated initializer.
     /// - Parameter request: Instance conforming to the `RequestProtocol`.
-    init(_ request: RequestProtocol) {
+    public init(_ request: RequestProtocol) {
         self.request = request
     }
 
