@@ -39,12 +39,27 @@ public class Endpoints {
         return url
     }
     
-    public func constructURLRequest(for url: URL, httpMethod: HTTPMethod, header: [String:String]) -> URLRequest {
+    public func constructURLRequest(for url: URL, httpMethod: HTTPMethod, header: [String:String] = [:]) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         for (key, value) in header {
             request.setValue(value, forHTTPHeaderField: key)
+        }
+        return request
+    }
+    
+    public func constructURLRequest<T: Codable>(for url: URL, httpMethod: HTTPMethod, header: [String:String] = [:], body: T) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        for (key, value) in header {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        do {
+            let data = try JSONEncoder().encode(T)
+        } catch {
+            print(error.localizedDescription)
         }
         return request
     }
