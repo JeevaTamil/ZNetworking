@@ -12,7 +12,7 @@ public extension RequestProtocol {
     /// Creates a URLRequest from this instance.
     /// - Parameter environment: The environment against which the `URLRequest` must be constructed.
     /// - Returns: An optional `URLRequest`.
-    public func urlRequest(with environment: EnvironmentProtocol) -> URLRequest? {
+    func urlRequest(with environment: EnvironmentProtocol) -> URLRequest? {
         // Create the base URL.
         guard let url = url(with: environment.baseURL) else {
             return nil

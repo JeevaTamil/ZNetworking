@@ -16,7 +16,7 @@ final class ZNetworkingTests: XCTestCase {
         let baseURL = "api.nomics.com"
         let currencies = "v1/currencies/ticker"
         
-        var cancellable = Set<AnyCancellable>()
+        _ = Set<AnyCancellable>()
         
         
         

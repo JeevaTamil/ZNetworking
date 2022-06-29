@@ -49,21 +49,21 @@ public class Endpoints {
         return request
     }
     
-    public func constructURLRequest<T: Codable>(for url: URL, httpMethod: HTTPMethod, header: [String:String] = [:], body: T) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.httpMethod = httpMethod.rawValue
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        for (key, value) in header {
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-        do {
-            let data = try JSONEncoder().encode(T)
-        } catch {
-            print(error.localizedDescription)
-        }
-        return request
-    }
-    
+//    public func constructURLRequest<T: Codable>(for url: URL, httpMethod: HTTPMethod, header: [String:String] = [:], body: T) -> URLRequest {
+//        var request = URLRequest(url: url)
+//        request.httpMethod = httpMethod.rawValue
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        for (key, value) in header {
+//            request.setValue(value, forHTTPHeaderField: key)
+//        }
+//        do {
+//            let data = try JSONEncoder().encode(T.Type)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return request
+//    }
+//
     public enum HTTPMethod: String {
         case GET, POST, PUT, DELETE
     }

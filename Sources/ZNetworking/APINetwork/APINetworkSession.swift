@@ -14,17 +14,17 @@ public class APINetworkSession: NSObject {
     var session: URLSession!
 
     /// A typealias describing a progress and completion handle tuple.
-    private typealias ProgressAndCompletionHandlers = (progress: ProgressHandler?, completion: ((URL?, URLResponse?, Error?) -> Void)?)
+    typealias ProgressAndCompletionHandlers = (progress: ProgressHandler?, completion: ((URL?, URLResponse?, Error?) -> Void)?)
 
     /// Dictionary containing associations of `ProgressAndCompletionHandlers` to `URLSessionTask` instances.
-    private var taskToHandlersMap: [URLSessionTask : ProgressAndCompletionHandlers] = [:]
+    var taskToHandlersMap: [URLSessionTask : ProgressAndCompletionHandlers] = [:]
 
     /// Convenience initializer.
     public override convenience init() {
         // Configure the default URLSessionConfiguration.
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForResource = 30
-        if #available(iOS 11, *) {
+        if #available(iOS 11, macOS 10.13, *) {
             sessionConfiguration.waitsForConnectivity = true
         }
 
@@ -51,14 +51,14 @@ public class APINetworkSession: NSObject {
     /// - Parameters:
     ///   - handlers: `ProgressAndCompletionHandlers` tuple.
     ///   - task: `URLSessionTask` instance.
-    private func set(handlers: ProgressAndCompletionHandlers?, for task: URLSessionTask) {
+    func set(handlers: ProgressAndCompletionHandlers?, for task: URLSessionTask) {
         taskToHandlersMap[task] = handlers
     }
 
     /// Fetches the `ProgressAndCompletionHandlers` for a given `URLSessionTask`.
     /// - Parameter task: `URLSessionTask` instance.
     /// - Returns: `ProgressAndCompletionHandlers` optional instance.
-    private func getHandlers(for task: URLSessionTask) -> ProgressAndCompletionHandlers? {
+    func getHandlers(for task: URLSessionTask) -> ProgressAndCompletionHandlers? {
         return taskToHandlersMap[task]
     }
 

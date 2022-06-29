@@ -7,9 +7,9 @@
 
 import Foundation
 
-public extension APINetworkSession: URLSessionDownloadDelegate {
+extension APINetworkSession: URLSessionDownloadDelegate {
 
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let handlers = getHandlers(for: downloadTask) else {
             return
         }
@@ -22,7 +22,7 @@ public extension APINetworkSession: URLSessionDownloadDelegate {
         set(handlers: nil, for: downloadTask)
     }
 
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         guard let handlers = getHandlers(for: downloadTask) else {
             return
         }
