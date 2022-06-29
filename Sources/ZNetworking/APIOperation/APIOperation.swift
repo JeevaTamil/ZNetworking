@@ -24,7 +24,7 @@ public class APIOperation: OperationProtocol {
     }
 
     /// Cancels the operation and the encapsulated task.
-    func cancel() {
+    public func cancel() {
         task?.cancel()
     }
 
@@ -32,7 +32,7 @@ public class APIOperation: OperationProtocol {
     /// - Parameters:
     ///   - requestDispatcher: `RequestDispatcherProtocol` object that will execute the request.
     ///   - completion: Completion block.
-    func execute(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult) -> Void) {
+    public func execute(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult) -> Void) {
         task = requestDispatcher.execute(request: request, completion: { result in
             completion(result)
         })
