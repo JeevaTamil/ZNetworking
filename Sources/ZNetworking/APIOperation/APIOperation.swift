@@ -8,7 +8,7 @@
 import Foundation
 
 /// API Operation class that can  execute and cancel a request.
-class APIOperation: OperationProtocol {
+public class APIOperation: OperationProtocol {
     typealias Output = OperationResult
 
     /// The `URLSessionTask` to be executed/

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Class handling the creation of URLSessionTaks and responding to URSessionDelegate callbacks.
-class APINetworkSession: NSObject {
+public class APINetworkSession: NSObject {
 
     /// The URLSession handing the URLSessionTaks.
     var session: URLSession!

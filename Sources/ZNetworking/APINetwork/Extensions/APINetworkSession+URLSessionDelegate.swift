@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension APINetworkSession: URLSessionDelegate {
+public extension APINetworkSession: URLSessionDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         guard let handlers = getHandlers(for: task) else {

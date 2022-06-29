@@ -9,7 +9,7 @@ import Foundation
 
 
 /// Class that handles the dispatch of requests to an environment with a given configuration.
-class APIRequestDispatcher: RequestDispatcherProtocol {
+public class APIRequestDispatcher: RequestDispatcherProtocol {
 
     /// The environment configuration.
     private var environment: EnvironmentProtocol

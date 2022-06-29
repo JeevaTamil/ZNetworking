@@ -8,7 +8,7 @@
 import Foundation
 
 /// The type to which all operations must conform in order to execute and cancel a request.
-protocol OperationProtocol {
+public protocol OperationProtocol {
     associatedtype Output
 
     /// The request to be executed.

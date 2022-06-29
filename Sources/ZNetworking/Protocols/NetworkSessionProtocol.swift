@@ -8,7 +8,7 @@
 import Foundation
 
 /// Protocol to which network session handling classes must conform to.
-protocol NetworkSessionProtocol {
+public protocol NetworkSessionProtocol {
     /// Create  a URLSessionDataTask. The caller is responsible for calling resume().
     /// - Parameters:
     ///   - request: `URLRequest` object.

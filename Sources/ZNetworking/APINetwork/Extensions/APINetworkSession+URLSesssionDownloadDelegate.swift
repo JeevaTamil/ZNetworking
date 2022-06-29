@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-extension APINetworkSession: URLSessionDownloadDelegate {
+public extension APINetworkSession: URLSessionDownloadDelegate {
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let handlers = getHandlers(for: downloadTask) else {

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Protocol to which environments must conform.
-protocol EnvironmentProtocol {
+public protocol EnvironmentProtocol {
     /// The default HTTP request headers for the environment.
     var headers: ReaquestHeaders? { get }
 

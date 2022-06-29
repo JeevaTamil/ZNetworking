@@ -8,7 +8,7 @@
 import Foundation
 
 /// Enum of API Errors
-enum APIError: Error {
+public enum APIError: Error {
     /// Encoding issue when trying to send data.
     case encodingError(String?)
     /// No data recieved from the server.

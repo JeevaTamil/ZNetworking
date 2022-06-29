@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RequestProtocol {
+public extension RequestProtocol {
 
     /// Creates a URLRequest from this instance.
     /// - Parameter environment: The environment against which the `URLRequest` must be constructed.
