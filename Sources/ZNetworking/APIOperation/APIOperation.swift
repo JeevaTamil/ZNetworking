@@ -32,7 +32,7 @@ public class APIOperation<T: Codable>: OperationProtocol {
     /// - Parameters:
     ///   - requestDispatcher: `RequestDispatcherProtocol` object that will execute the request.
     ///   - completion: Completion block.
-    public func execute<T: Codable>(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult<T>) -> Void) {
+    public func execute(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult<T>) -> Void) {
         task = requestDispatcher.execute(request: request, completion: { result in
             completion(result)
         })
