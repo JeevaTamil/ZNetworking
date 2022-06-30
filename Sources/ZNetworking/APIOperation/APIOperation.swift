@@ -8,8 +8,8 @@
 import Foundation
 
 /// API Operation class that can  execute and cancel a request.
-public class APIOperation: OperationProtocol {
-    typealias Output = OperationResult
+public class APIOperation<T: Codable>: OperationProtocol {
+    typealias Output = OperationResult<T>
 
     /// The `URLSessionTask` to be executed/
     private var task: URLSessionTask?
@@ -32,7 +32,7 @@ public class APIOperation: OperationProtocol {
     /// - Parameters:
     ///   - requestDispatcher: `RequestDispatcherProtocol` object that will execute the request.
     ///   - completion: Completion block.
-    public func execute(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult) -> Void) {
+    public func execute<T: Codable>(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult<T>) -> Void) {
         task = requestDispatcher.execute(request: request, completion: { result in
             completion(result)
         })

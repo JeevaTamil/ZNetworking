@@ -8,13 +8,15 @@
 import Foundation
 
 /// The expected result of an API Operation.
-public enum OperationResult {
+public enum OperationResult<T: Codable> {
     /// JSON reponse.
     case json(_ : Any?, _ : HTTPURLResponse?)
     /// A downloaded file with an URL.
     case file(_ : URL?, _ : HTTPURLResponse?)
     /// An error.
     case error(_ : Error?, _ : HTTPURLResponse?)
+    /// Codable
+    case codable(_ : T?, _ : HTTPURLResponse?)
 }
 
 /// Protocol to which a request dispatcher must conform to.
@@ -30,5 +32,5 @@ public protocol RequestDispatcherProtocol {
     /// - Parameters:
     ///   - request: Instance conforming to `RequestProtocol`
     ///   - completion: Completion handler.
-    func execute(request: RequestProtocol, completion: @escaping (OperationResult) -> Void) -> URLSessionTask?
+    func execute<T: Codable>(request: RequestProtocol, completion: @escaping (OperationResult<T>) -> Void) -> URLSessionTask?
 }

@@ -30,7 +30,7 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
     /// - Parameters:
     ///   - request: Instance conforming to `RequestProtocol`
     ///   - completion: Completion handler.
-    func execute(request: RequestProtocol, completion: @escaping (OperationResult) -> Void) -> URLSessionTask? {
+    public func execute<T: Codable>(request: RequestProtocol, completion: @escaping (OperationResult<T>) -> Void) -> URLSessionTask? {
         // Create a URL request.
         guard var urlRequest = request.urlRequest(with: environment) else {
             completion(.error(APIError.badRequest("Invalid URL for: \(request)"), nil))
@@ -71,7 +71,7 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
     ///   - urlResponse: The received  optional `URLResponse` instance.
     ///   - error: The received  optional `Error` instance.
     ///   - completion: Completion handler.
-    private func handleJsonTaskResponse(data: Data?, urlResponse: URLResponse?, error: Error?, completion: @escaping (OperationResult) -> Void) {
+    private func handleJsonTaskResponse<T: Codable>(data: Data?, urlResponse: URLResponse?, error: Error?, completion: @escaping (OperationResult<T>) -> Void) {
         // Check if the response is valid.
         guard let urlResponse = urlResponse as? HTTPURLResponse else {
             completion(OperationResult.error(APIError.invalidResponse, nil))
@@ -82,6 +82,7 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
         switch result {
         case .success(let data):
             // Parse the JSON data
+//            let parsedResult = parse(data: data as? Data)
             let parseResult = parse(data: data as? Data)
             switch parseResult {
             case .success(let json):
@@ -106,7 +107,7 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
     ///   - urlResponse: The received  optional `URLResponse` instance.
     ///   - error: The received  optional `Error` instance.
     ///   - completion: Completion handler.
-    private func handleFileTaskResponse(fileUrl: URL?, urlResponse: URLResponse?, error: Error?, completion: @escaping (OperationResult) -> Void) {
+    private func handleFileTaskResponse<T: Codable>(fileUrl: URL?, urlResponse: URLResponse?, error: Error?, completion: @escaping (OperationResult<T>) -> Void) {
         guard let urlResponse = urlResponse as? HTTPURLResponse else {
             completion(OperationResult.error(APIError.invalidResponse, nil))
             return
@@ -125,6 +126,43 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
             }
         }
     }
+    
+    /// Handles the data response that is expected as a JSON object output.
+    /// - Parameters:
+    ///   - data: The `Data` instance to be serialized into a JSON object.
+    ///   - urlResponse: The received  optional `URLResponse` instance.
+    ///   - error: The received  optional `Error` instance.
+    ///   - completion: Completion handler.
+    private func handleCodableTaskResponse<T: Codable>(data: Data?, urlResponse: URLResponse?, error: Error?, completion: @escaping (OperationResult<T>) -> Void) {
+        // Check if the response is valid.
+        guard let urlResponse = urlResponse as? HTTPURLResponse else {
+            completion(OperationResult.error(APIError.invalidResponse, nil))
+            return
+        }
+        // Verify the HTTP status code.
+        let result = verify(data: data, urlResponse: urlResponse, error: error)
+        switch result {
+        case .success(let data):
+            // Parse the JSON data
+            let parsedResult: Result<T, Error> = parse(data: data as? Data)
+            //let parseResult = parse(data: data as? Data)
+            switch parsedResult {
+            case .success(let codable):
+                DispatchQueue.main.async {
+                    completion(OperationResult.codable(codable, urlResponse))
+                   // completion(OperationResult.json(json, urlResponse))
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(OperationResult.error(error, urlResponse))
+                }
+            }
+        case .failure(let error):
+            DispatchQueue.main.async {
+                completion(OperationResult.error(error, urlResponse))
+            }
+        }
+    }
 
     /// Parses a `Data` object into a JSON object.
     /// - Parameter data: `Data` instance to be parsed.
@@ -137,6 +175,22 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
             return .success(json)
+        } catch (let exception) {
+            return .failure(APIError.parseError(exception.localizedDescription))
+        }
+    }
+    
+    /// Parses a `Data` object into a JSON object.
+    /// - Parameter data: `Data` instance to be parsed.
+    /// - Returns: A `Result` instance with codable item.
+    private func parse<T: Codable>(data: Data?) -> Result<T, Error> {
+        guard let data = data else {
+            return .failure(APIError.invalidResponse)
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(T.self, from: data)
+            return .success(result)
         } catch (let exception) {
             return .failure(APIError.parseError(exception.localizedDescription))
         }
