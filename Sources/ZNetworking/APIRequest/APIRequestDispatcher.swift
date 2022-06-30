@@ -58,6 +58,10 @@ public class APIRequestDispatcher: RequestDispatcherProtocol {
                 self?.handleJsonTaskResponse(data: data, urlResponse: urlResponse, error: error, completion: completion)
             })
             break
+        case .codableData:
+            task = networkSession.dataTask(with: urlRequest, completionHandler: { [weak self] (data, urlResponse, error) in
+                self?.handleCodableTaskResponse(data: data, urlResponse: urlResponse, error: error, completion: completion)
+            })
         }
         // Start the task.
         task?.resume()

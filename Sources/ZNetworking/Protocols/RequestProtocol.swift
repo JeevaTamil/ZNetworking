@@ -15,6 +15,8 @@ public enum RequestType {
     case download
     /// Will translate to a URLSessionUploadTask.
     case upload
+    ///  /// Will translate to a URLSessionDataTask for codable
+    case codableData
 }
 
 /// The expected remote response type.
